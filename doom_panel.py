@@ -23,7 +23,7 @@ _BUNDLE = _HERE / "doom.jsdos"
 
 # Bump when the bundle changes — js-dos caches by URL (browser + IndexedDB), so a new
 # version string forces a fresh fetch instead of replaying a stale cached game.
-_BUNDLE_VERSION = "2"
+_BUNDLE_VERSION = "3"
 
 
 def build_panel_router(cfg: dict | None):
