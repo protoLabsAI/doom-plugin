@@ -21,6 +21,10 @@ log = logging.getLogger("protoagent.plugins.doom")
 _HERE = Path(__file__).parent
 _BUNDLE = _HERE / "doom.jsdos"
 
+# Bump when the bundle changes — js-dos caches by URL (browser + IndexedDB), so a new
+# version string forces a fresh fetch instead of replaying a stale cached game.
+_BUNDLE_VERSION = "2"
+
 
 def build_panel_router(cfg: dict | None):
     from fastapi import APIRouter
@@ -32,7 +36,8 @@ def build_panel_router(cfg: dict | None):
 
     @router.get("/panel")
     async def _panel():
-        bundle = override or "doom.jsdos"  # relative → /plugins/doom/doom.jsdos
+        # relative → /plugins/doom/doom.jsdos; ?v busts js-dos's URL-keyed cache.
+        bundle = override or f"doom.jsdos?v={_BUNDLE_VERSION}"
         return HTMLResponse(_PAGE.replace("__BUNDLE__", bundle))
 
     @router.get("/doom.jsdos")
