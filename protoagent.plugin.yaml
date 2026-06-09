@@ -23,6 +23,12 @@ config:
 views:
   - { id: panel, label: "DOOM", icon: Target, path: /plugins/doom/panel }
 
+# Event topics this plugin emits (ADR 0039) — `doom.play` is the AI→UI intent the
+# `can_you_play_doom` tool fires to open the DOOM view + start a game.
+emits:
+  - doom.play
+
 # Declarative only (surfaced for review).
 capabilities:
   views: [panel]
+  tools: [can_you_play_doom]

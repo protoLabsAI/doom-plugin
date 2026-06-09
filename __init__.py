@@ -24,3 +24,12 @@ def register(registry) -> None:
         log.info("[doom] DOOM panel registered — rip and tear.")
     except Exception:  # noqa: BLE001 — the panel is the whole plugin; log loudly if it fails
         log.exception("[doom] mounting the DOOM panel failed")
+
+    # The "can you play DOOM?" tool — answers yes AND drives the UI (emits doom.play so
+    # the console opens the DOOM view + starts the game). Needs the registry to emit.
+    try:
+        from .tools import make_tools
+        registry.register_tools(make_tools(registry))
+        log.info("[doom] can_you_play_doom tool registered")
+    except Exception:  # noqa: BLE001 — the panel still serves even if the tool fails
+        log.exception("[doom] registering the DOOM tool failed")
