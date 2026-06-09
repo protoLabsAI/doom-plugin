@@ -24,7 +24,7 @@ views:
   - { id: panel, label: "DOOM", icon: Target, path: /plugins/doom/panel }
 
 # Declarative only (surfaced for review). The `can_you_play_doom` tool drives the
-# console to the DOOM view via `registry.navigate("panel")` (ADR 0043 plugin-driven
+# console to the DOOM view via `registry.navigate("panel")` (ADR 0044 plugin-driven
 # navigation) — a host intent, not a plugin event, so nothing is declared under `emits`.
 capabilities:
   views: [panel]

@@ -23,7 +23,7 @@ def make_tools(registry):
         "but can it run DOOM". It opens the DOOM view in the console and starts a game
         (Episode 1, E1M1). Returns a short confirmation to say back to the operator.
         """
-        # Plugin-driven UI navigation (ADR 0043): ask the console to open this plugin's
+        # Plugin-driven UI navigation (ADR 0044): ask the console to open this plugin's
         # DOOM view. The panel's js-dos boots the game automatically (autoStart).
         # Fire-and-forget — if no console is connected, the answer is still returned.
         registry.navigate("panel")
