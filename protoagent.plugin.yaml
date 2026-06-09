@@ -1,0 +1,28 @@
+id: doom
+name: DOOM
+version: 0.1.0
+description: >-
+  But can it run DOOM? Yes. A console view that runs the shareware DOOM (Episode 1)
+  in the operator's browser via **js-dos** (DOSBox-X in WebAssembly) — the operator
+  plays in-panel with the keyboard. The game (DOOM.EXE + DOOM1.WAD, freely
+  redistributable id Software shareware) is **self-hosted** by the plugin; only the
+  js-dos runtime loads from CDN. No tools, no agent surface — pure operator fun.
+
+  Ships DISABLED; enable with `plugins: { enabled: [doom] }`.
+enabled: false
+repository: https://github.com/protoLabsAI/doom-plugin
+min_protoagent_version: "0.27.0"
+
+# Plugin config (read from `doom:` in langgraph-config.yaml).
+config_section: doom
+config:
+  bundle_url: ""   # override the js-dos game bundle URL; blank = the self-hosted shareware DOOM
+
+# Console view (ADR 0026) — the playable DOOM panel. `Target` (a crosshair) is the
+# on-theme icon from the plugin-view allowlist.
+views:
+  - { id: panel, label: "DOOM", icon: Target, path: /plugins/doom/panel }
+
+# Declarative only (surfaced for review).
+capabilities:
+  views: [panel]

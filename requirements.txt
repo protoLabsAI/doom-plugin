@@ -1,0 +1,1 @@
+# No third-party deps — uses protoAgent's FastAPI. Game assets are vendored (doom.jsdos).
