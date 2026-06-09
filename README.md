@@ -39,25 +39,25 @@ plugins:
 
 Click the panel first to grab the keyboard.
 
-## Config (`doom:` in `langgraph-config.yaml`)
-
-| key | default | meaning |
-|---|---|---|
-| `bundle_url` | `""` | Override the js-dos game bundle URL. Blank = the self-hosted shareware DOOM bundled with the plugin. Point it at the registered DOOM (`DOOM2.WAD`/`doom.wad` packaged as a `.jsdos`) to play the full game. |
+No config — the engine and WAD are vendored; there's nothing to tune.
 
 ## How it works
 
 - `protoagent.plugin.yaml` declares one view → the host mounts the plugin's router at
   `/plugins/doom` and shows a rail icon that iframes `/plugins/doom/panel`.
-- `doom_panel.py` serves that HTML (js-dos boot) + the `.jsdos` bundle at
-  `/plugins/doom/doom.jsdos`.
-- js-dos extracts the bundle in the browser and runs `DOOM.EXE` under DOSBox-X/WASM.
+- `doom_panel.py` serves the panel HTML plus the WASM engine + WAD **same-origin**
+  (`wasm/websockets-doom.{js,wasm}`, `wasm/doom1.wad`) behind an allowlist.
+- `wasm/boot.js` boots **prboom** single-player: it preloads `doom1.wad` into the
+  engine's in-memory filesystem and runs the game windowed, rendering to a `<canvas>`.
+  **No DOS, no DOSBox** — pure WebAssembly.
 
 ## Legal
 
-`DOOM1.WAD` and the DOS `DOOM.EXE` shipped here are id Software's **shareware**
-release of DOOM, which the shareware license permits redistributing unmodified. DOOM
-© id Software. To play the full registered game, supply your own WAD via `bundle_url`.
+The shareware `doom1.wad` shipped here is id Software's freely-redistributable shareware
+DOOM episode-1 IWAD, which the shareware license permits redistributing unmodified. DOOM
+© id Software. The WASM engine (`wasm/websockets-doom.{js,wasm}`) is **prboom** compiled to
+WebAssembly, **GPL-2.0** — see [`wasm/NOTICE.md`](./wasm/NOTICE.md) for attribution + the
+corresponding source. To play the full game, drop your own registered WAD into `wasm/`.
 
 A `protoagent-plugin` for the [protoAgent](https://github.com/protoLabsAI/protoAgent)
 fleet.
