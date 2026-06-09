@@ -57,7 +57,7 @@ _PAGE = r"""<!doctype html>
 <style>
   html,body{margin:0;height:100%;background:#000;overflow:hidden;
     font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#9a9a9a}
-  #doom{display:block;width:100vw;height:100vh;background:#000;cursor:crosshair;
+  #canvas{display:block;width:100vw;height:100vh;background:#000;cursor:crosshair;
     image-rendering:pixelated;image-rendering:crisp-edges;outline:none}
   #status{position:fixed;left:12px;top:10px;font-size:12px;opacity:.7;z-index:5}
   #hint{position:fixed;left:12px;bottom:9px;font-size:11px;opacity:.55;z-index:6;
@@ -65,7 +65,7 @@ _PAGE = r"""<!doctype html>
   #hint b{color:#c0392b}
 </style></head>
 <body>
-  <canvas id="doom" tabindex="0"></canvas>
+  <canvas id="canvas" tabindex="0"></canvas>
   <div id="status">loading DOOM…</div>
   <div id="hint"><b>DOOM</b> — ↑↓←→ move · Ctrl fire · Alt strafe · Space use · click the canvas to play</div>
   <script src="boot.js"></script>

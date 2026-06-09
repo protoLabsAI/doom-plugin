@@ -15,7 +15,9 @@ window.Module = {
   ],
 
   canvas: (function () {
-    var c = document.getElementById("doom");
+    // NB: the engine hardcodes document.getElementById("canvas") for input handler
+    // registration (websockets-doom.js), so the canvas MUST be id="canvas".
+    var c = document.getElementById("canvas");
     // Don't pop the browser menu on right-click (DOOM uses it), and take keyboard focus.
     c.addEventListener("contextmenu", function (e) { e.preventDefault(); });
     c.addEventListener("click", function () { c.focus(); });
