@@ -1,12 +1,14 @@
 """DOOM agent tools — the one that answers the eternal question.
 
 ``can_you_play_doom`` does two things when the agent calls it: answers *yes*, and
-**drives the UI** — it emits a ``doom.play`` event on the server→console bus (ADR
-0003/0039) so the console opens the DOOM view, where the panel auto-starts the game.
+**drives the UI** — it calls ``registry.navigate("panel")`` (ADR 0044 plugin-driven
+navigation) so the console opens this plugin's DOOM view, where the panel auto-starts
+the game.
 
-This is the first instance of "the AI navigates the UI for us": a tool emits a UI
-intent on the event bus, and the console (subscribed via ``lib/events.ts``) acts on it.
-The emit is fire-and-forget and namespaced to this plugin (``doom.*``).
+This is "the AI navigates the UI for us": a tool issues a host navigation intent
+naming one of the plugin's own views, and the console acts on it. ``navigate`` is
+fire-and-forget — if no console is connected the answer is still returned. It's a host
+intent, not a plugin event, so the plugin declares nothing under ``emits``.
 """
 
 from __future__ import annotations

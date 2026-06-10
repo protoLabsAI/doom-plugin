@@ -54,8 +54,18 @@ _PAGE = r"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <title>DOOM</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<!-- protoLabs design-system plugin-kit (served same-origin by the console, ADR 0038). -->
-<link rel="stylesheet" href="/_ds/plugin-kit.css">
+<!-- protoLabs design-system plugin-kit (served same-origin by the console, ADR 0038).
+     Slug-aware (ADR 0042): the iframe lives at /plugins/… (host window) or
+     /agents/<slug>/plugins/… (peer window), so derive the base from the path and link
+     same-origin — never hardcode /_ds/… (that pins the HUB's DS, not this agent's). -->
+<script>
+  (function () {
+    var base = location.pathname.split("/plugins/")[0]; // "" on host, "/agents/<slug>" proxied
+    var l = document.createElement("link");
+    l.rel = "stylesheet"; l.href = base + "/_ds/plugin-kit.css";
+    document.head.appendChild(l);
+  })();
+</script>
 <style>
   /* Page / framing chrome — themed by the DS tokens. The DOOM canvas viewport
      keeps its own fixed black background (the game palette is NOT themeable). */
