@@ -26,8 +26,9 @@ def register(registry) -> None:
     except Exception:  # noqa: BLE001 — the panel is the whole plugin; log loudly if it fails
         log.exception("[doom] mounting the DOOM panel failed")
 
-    # The "can you play DOOM?" tool — answers yes AND drives the UI (emits doom.play so
-    # the console opens the DOOM view + starts the game). Needs the registry to emit.
+    # The "can you play DOOM?" tool — answers yes AND drives the UI: it calls
+    # registry.navigate("panel") (ADR 0044 plugin-driven navigation) so the console
+    # opens the DOOM view + starts the game. Needs the registry to navigate.
     try:
         from .tools import make_tools
         registry.register_tools(make_tools(registry))
