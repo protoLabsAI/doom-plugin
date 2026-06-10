@@ -54,20 +54,56 @@ _PAGE = r"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <title>DOOM</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- protoLabs design-system plugin-kit (served same-origin by the console, ADR 0038). -->
+<link rel="stylesheet" href="/_ds/plugin-kit.css">
 <style>
-  html,body{margin:0;height:100%;background:#000;overflow:hidden;
-    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#9a9a9a}
+  /* Page / framing chrome — themed by the DS tokens. The DOOM canvas viewport
+     keeps its own fixed black background (the game palette is NOT themeable). */
+  html,body{margin:0;height:100%;background:var(--pl-color-bg-inset,#000);overflow:hidden;
+    font-family:var(--pl-font-mono,ui-monospace,SFMono-Regular,Menlo,monospace);
+    color:var(--pl-color-fg-muted)}
   #canvas{display:block;width:100vw;height:100vh;background:#000;cursor:crosshair;
     image-rendering:pixelated;image-rendering:crisp-edges;outline:none}
-  #status{position:fixed;left:12px;top:10px;font-size:12px;opacity:.7;z-index:5}
-  #hint{position:fixed;left:12px;bottom:9px;font-size:11px;opacity:.55;z-index:6;
-    pointer-events:none;letter-spacing:.02em}
-  #hint b{color:#c0392b}
+  /* Loading chrome (#status): DS empty-state. boot.js drives its textContent + hides
+     it on runtime init; :has() collapses the whole slot once it's hidden. */
+  #loading{position:fixed;left:var(--pl-space-3,12px);top:var(--pl-space-2,10px);z-index:5;
+    display:flex;align-items:center;gap:var(--pl-space-2,8px)}
+  #loading:has(#status[style*="display: none"]){display:none}
+  #loading .pl-spinner{width:14px;height:14px}
+  #status{font-size:12px}
+  /* Controls hint (#hint): DS info callout. */
+  #hint{position:fixed;left:var(--pl-space-3,12px);bottom:var(--pl-space-2,9px);z-index:6;
+    pointer-events:none;max-width:none;font-size:11px}
+  #hint .pl-callout__body{font-size:11px;line-height:1.5;letter-spacing:.02em}
+  #hint .pl-kbd{font-size:.82em}
+  #hint .pl-dot-row{margin-right:.45rem}
+  #hint b{color:var(--pl-color-accent)}
 </style></head>
 <body>
   <canvas id="canvas" tabindex="0"></canvas>
-  <div id="status">loading DOOM…</div>
-  <div id="hint"><b>DOOM</b> — ↑↓←→ move · Ctrl fire · Alt strafe · Space use · click the canvas to play</div>
+  <div id="loading" class="pl-empty pl-empty--slotted">
+    <span class="pl-spinner" aria-hidden="true"></span>
+    <span id="status">loading DOOM…</span>
+  </div>
+  <div id="hint" class="pl-callout pl-callout--info">
+    <div class="pl-callout__body">
+      <span class="pl-dot-row"><span class="pl-dot pl-dot--info pl-dot--pulse"></span></span>
+      <b>DOOM</b> — <span class="pl-kbd">↑</span><span class="pl-kbd">↓</span><span class="pl-kbd">←</span><span class="pl-kbd">→</span> move ·
+      <span class="pl-kbd">Ctrl</span> fire · <span class="pl-kbd">Alt</span> strafe ·
+      <span class="pl-kbd">Space</span> use · click the canvas to play
+    </div>
+  </div>
+  <script>
+  // ADR 0038 handshake — the console posts protoagent:init {token, theme} on load and
+  // protoagent:theme {theme} live; theme is a curated {bg,bgPanel,fg,fgMuted,brand,border}.
+  // We fan each curated key out onto the matching --pl-* token(s) on :root.
+  const TMAP={bg:["--pl-color-bg"],bgPanel:["--pl-color-bg-raised","--pl-color-bg-subtle"],fg:["--pl-color-fg"],fgMuted:["--pl-color-fg-muted"],brand:["--pl-color-accent"],border:["--pl-color-border"]};
+  let TOKEN=null;
+  function applyTheme(t){const r=document.documentElement;for(const[k,v] of Object.entries(t||{}))(TMAP[k]||(k.startsWith("--pl-")?[k]:[])).forEach(p=>v&&r.style.setProperty(p,v));}
+  window.addEventListener("message",(e)=>{const d=e.data||{};
+    if(d.type==="protoagent:init"){if(d.token)TOKEN=d.token;applyTheme(d.theme);}
+    else if(d.type==="protoagent:theme")applyTheme(d.theme);});
+  </script>
   <script src="boot.js"></script>
   <script src="websockets-doom.js"></script>
 </body></html>
