@@ -1,11 +1,12 @@
 """doom — but can it run DOOM? Yes.
 
-A console-only plugin: it contributes a single **DOOM panel** view that runs the
-shareware DOOM (Episode 1) in the operator's browser via js-dos (DOSBox-X in
-WebAssembly). The game (DOOM.EXE + DOOM1.WAD — freely redistributable id Software
-shareware) is self-hosted by the plugin; only the js-dos runtime loads from CDN.
+It contributes a **DOOM panel** view that runs the shareware DOOM (Episode 1) in the
+operator's browser via a **WebAssembly prboom** engine (no DOS layer). The engine
+(`wasm/websockets-doom.{js,wasm}`, GPL prboom) and the freely-redistributable shareware
+`doom1.wad` are self-hosted by the plugin and served same-origin — no external runtime.
 
-No tools, no agent surface — pure operator fun. Ships DISABLED; enable with
+Plus the `can_you_play_doom` tool, which answers the question and opens the view (ADR
+0044 plugin-driven navigation). Ships DISABLED; enable with
 ``plugins: { enabled: [doom] }``.
 """
 

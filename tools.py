@@ -24,7 +24,7 @@ def make_tools(registry):
         (Episode 1, E1M1). Returns a short confirmation to say back to the operator.
         """
         # Plugin-driven UI navigation (ADR 0044): ask the console to open this plugin's
-        # DOOM view. The panel's js-dos boots the game automatically (autoStart).
+        # DOOM view. The panel's WASM prboom engine boots the game automatically.
         # Fire-and-forget — if no console is connected, the answer is still returned.
         registry.navigate("panel")
         return ("Yes — I can run DOOM. Opening it now and dropping into E1M1. "
