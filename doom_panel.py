@@ -59,12 +59,11 @@ _PAGE = r"""<!doctype html>
      /agents/<slug>/plugins/… (peer window), so derive the base from the path and link
      same-origin — never hardcode /_ds/… (that pins the HUB's DS, not this agent's). -->
 <script>
-  (function () {
-    var base = location.pathname.split("/plugins/")[0]; // "" on host, "/agents/<slug>" proxied
-    var l = document.createElement("link");
-    l.rel = "stylesheet"; l.href = base + "/_ds/plugin-kit.css";
-    document.head.appendChild(l);
-  })();
+  // The ONE base derivation — the CSS link below and the kit boot at the bottom of
+  // the page both prefix it (the canonical block from protoAgent
+  // docs/how-to/build-a-plugin-view.md).
+  window.__base = location.pathname.split("/plugins/")[0]; // "" on host, "/agents/<slug>" proxied
+  document.write('<link rel="stylesheet" href="' + window.__base + '/_ds/plugin-kit.css">');
 </script>
 <style>
   /* Page / framing chrome — themed by the DS tokens. The DOOM canvas viewport
@@ -104,15 +103,15 @@ _PAGE = r"""<!doctype html>
     </div>
   </div>
   <script type="module">
-  // The DS plugin-kit owns the protoagent:init handshake — it maps the console's
-  // curated theme onto the --pl-* tokens (initial + live re-themes), replacing the
-  // hand-rolled TMAP/listener this page carried. plugin-kit.js is an ES MODULE, so
-  // it loads via dynamic import (a classic <script src> throws on its exports; see
-  // protoAgent docs/how-to/build-a-plugin-view.md). No data fetches here — the
-  // game assets load relative (slug-safe) and the chrome is the only themed part.
+  // Kit boot — the canonical block (protoAgent docs/how-to/build-a-plugin-view.md).
+  // ESM, so dynamic import (protoContent#224); theming is the kit's only job here.
   try {
-    (await import(location.pathname.split("/plugins/")[0] + "/_ds/plugin-kit.js")).initPluginView();
-  } catch (e) { /* older host without /_ds — the kit css fallbacks keep the chrome legible */ }
+    const kit = await import(window.__base + "/_ds/plugin-kit.js");
+    kit.initPluginView();
+  } catch {
+    // Host too old to serve /_ds (pre-#893): no live theming, but the CSS
+    // fallbacks keep the chrome legible and the game is unaffected.
+  }
   </script>
   <script src="boot.js"></script>
   <script src="websockets-doom.js"></script>
