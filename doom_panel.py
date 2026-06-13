@@ -103,16 +103,16 @@ _PAGE = r"""<!doctype html>
       <span class="pl-kbd">Space</span> use · click the canvas to play
     </div>
   </div>
-  <script>
-  // ADR 0038 handshake — the console posts protoagent:init {token, theme} on load and
-  // protoagent:theme {theme} live; theme is a curated {bg,bgPanel,fg,fgMuted,brand,border}.
-  // We fan each curated key out onto the matching --pl-* token(s) on :root.
-  const TMAP={bg:["--pl-color-bg"],bgPanel:["--pl-color-bg-raised","--pl-color-bg-subtle"],fg:["--pl-color-fg"],fgMuted:["--pl-color-fg-muted"],brand:["--pl-color-accent"],border:["--pl-color-border"]};
-  let TOKEN=null;
-  function applyTheme(t){const r=document.documentElement;for(const[k,v] of Object.entries(t||{}))(TMAP[k]||(k.startsWith("--pl-")?[k]:[])).forEach(p=>v&&r.style.setProperty(p,v));}
-  window.addEventListener("message",(e)=>{const d=e.data||{};
-    if(d.type==="protoagent:init"){if(d.token)TOKEN=d.token;applyTheme(d.theme);}
-    else if(d.type==="protoagent:theme")applyTheme(d.theme);});
+  <script type="module">
+  // The DS plugin-kit owns the protoagent:init handshake — it maps the console's
+  // curated theme onto the --pl-* tokens (initial + live re-themes), replacing the
+  // hand-rolled TMAP/listener this page carried. plugin-kit.js is an ES MODULE, so
+  // it loads via dynamic import (a classic <script src> throws on its exports; see
+  // protoAgent docs/how-to/build-a-plugin-view.md). No data fetches here — the
+  // game assets load relative (slug-safe) and the chrome is the only themed part.
+  try {
+    (await import(location.pathname.split("/plugins/")[0] + "/_ds/plugin-kit.js")).initPluginView();
+  } catch (e) { /* older host without /_ds — the kit css fallbacks keep the chrome legible */ }
   </script>
   <script src="boot.js"></script>
   <script src="websockets-doom.js"></script>

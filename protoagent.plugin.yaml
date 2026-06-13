@@ -1,6 +1,6 @@
 id: doom
 name: DOOM
-version: 0.1.0
+version: 0.2.0
 description: >-
   But can it run DOOM? Yes. A console view that runs the shareware DOOM (Episode 1)
   in the operator's browser via a **WebAssembly prboom** engine (no DOS layer) — the
